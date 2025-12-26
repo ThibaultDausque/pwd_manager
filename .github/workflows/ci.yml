@@ -1,0 +1,10 @@
+name: continue integration
+
+on:
+  push:
+    branches: [ $default_branch ]
+  pull:
+    branches: [ $default_branch ]
+jobs:
+  front-test:
+    runs-on: ubuntu-latest
