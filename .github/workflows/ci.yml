@@ -2,12 +2,38 @@ name: continue integration
 
 on:
   push:
-    branches: [ $default_branch ]
-  pull:
-    branches: [ $default_branch ]
+    branches: [ $default ]
+  workflow_dispatch:
+
 jobs:
   front-test:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: front
+
+permissions:
+  contents: reads
+  checks: write
+  #id-token: write --> for cloud services
+  pages: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    working-directory: front
+    name: package-manager
+    id: detect-package-manager
+    run: |
+      if [ -f "${{ github.workspace }}/pnpm-lock.yaml" ]; then
+        echo "manager=pnpm" >> $GITHUB_OUTPUT
+        echo "command=install" >> $GITHUB_OUTPUT
+        echo "runner=pnpm" >> $GITHUB_OUTPUT
+      else
+        echo "Unable to determine package manager"
+        exit 1;
+      fi
+    name: Setup Node
+    with:
+      static_site_generator: next
+      uses: actions/setup-node@v4
