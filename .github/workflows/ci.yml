@@ -1,39 +1,55 @@
-name: continue integration
+# --- EXEMPLE ---
+# name: continue integration
 
-on:
-  push:
-    branches: [ $default ]
-  workflow_dispatch:
+# on:
+#   push:
+#     branches: [ $default ]
+#   workflow_dispatch:
 
+# jobs:
+#   front-test:
+#     runs-on: ubuntu-latest
+#     defaults:
+#       run:
+#         working-directory: front
+
+# permissions:
+#   contents: reads
+#   checks: write
+#   #id-token: write --> for cloud services
+#   pages: write
+
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+#     working-directory: front
+#     name: package-manager
+#     id: detect-package-manager
+#     run: |
+#       if [ -f "${{ github.workspace }}/pnpm-lock.yaml" ]; then
+#         echo "manager=pnpm" >> $GITHUB_OUTPUT
+#         echo "command=install" >> $GITHUB_OUTPUT
+#         echo "runner=pnpm" >> $GITHUB_OUTPUT
+#       else
+#         echo "Unable to determine package manager"
+#         exit 1;
+#       fi
+#     name: Setup Node
+#     with:
+#       static_site_generator: next
+#       uses: actions/setup-node@v4
+# ------
+
+name: Front - Node.js CI
+on: [push]
 jobs:
-  front-test:
+  build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: front
-
-permissions:
-  contents: reads
-  checks: write
-  #id-token: write --> for cloud services
-  pages: write
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    working-directory: front
-    name: package-manager
-    id: detect-package-manager
-    run: |
-      if [ -f "${{ github.workspace }}/pnpm-lock.yaml" ]; then
-        echo "manager=pnpm" >> $GITHUB_OUTPUT
-        echo "command=install" >> $GITHUB_OUTPUT
-        echo "runner=pnpm" >> $GITHUB_OUTPUT
-      else
-        echo "Unable to determine package manager"
-        exit 1;
-      fi
-    name: Setup Node
-    with:
-      static_site_generator: next
-      uses: actions/setup-node@v4
+    steps:
+      - uses: actions/checkout@v5
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - run: npm ci
+      - run: npm run build --if-present
