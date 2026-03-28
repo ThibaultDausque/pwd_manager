@@ -45,6 +45,9 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    default:
+      run:
+        working-directory: ./front
     steps:
       - uses: actions/checkout@v5
       - name: Use Node.js
