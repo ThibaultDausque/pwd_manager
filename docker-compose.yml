@@ -1,0 +1,14 @@
+services:
+  front:
+    image: nextjs_front
+    ports:
+      - 3000:3000
+    environment:
+      - TZ=Europe/France
+  
+  back:
+    image: django_back
+    ports:
+      - 
+    environment:
+      - TZ=Europe/France
