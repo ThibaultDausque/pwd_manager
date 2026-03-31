@@ -64,6 +64,7 @@ jobs:
           node-version: '20.x'
       - run: npm install
       - run: npm run build --if-present
+      
   back-test:
     runs-on: ubuntu-latest
     defaults:
